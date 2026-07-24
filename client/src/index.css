@@ -1,0 +1,16 @@
+ @import "tailwindcss";
+
+body {
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.scale-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.scale-card:hover {
+  transform: translateY(-4px);
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: #f8f9fa;
+}
