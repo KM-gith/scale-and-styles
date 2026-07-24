@@ -24,7 +24,7 @@ export default function AudioPlayer({ src, onPlay }) {
       </button>
       <audio
         ref={audioRef}
-        src={`http://localhost:5000${src}`}
+        src={`${import.meta.env.VITE_API_URL}${src}`}
         onEnded={() => setIsPlaying(false)}
         className="flex-1 h-8"
         controls
