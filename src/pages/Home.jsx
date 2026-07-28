@@ -43,7 +43,7 @@ export default function Home() {
 
         {/* ETHIOPIAN SCALES */}
         {ethiopianScales.length > 0 && (
-          <div className="mb-10">
+          <div className="mt-16 mb-10">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                Ethiopian Scales
             </h2>
@@ -77,18 +77,6 @@ function ScaleCard({ scale }) {
       <h3 className="text-lg font-bold mb-1" style={{ color: scale.color }}>
         {scale.name}
       </h3>
-      <p className="text-gray-400 text-sm line-clamp-2">{scale.description}</p>
-      <div className="flex gap-1 mt-3 flex-wrap">
-        {scale.intervals?.map((iv, i) => (
-          <span
-            key={i}
-            className="text-xs px-2 py-0.5 rounded-full"
-            style={{ backgroundColor: scale.color + "33", color: scale.color }}
-          >
-            {iv}
-          </span>
-        ))}
-      </div>
     </Link>
   );
 }
