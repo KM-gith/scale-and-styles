@@ -21,13 +21,13 @@ export default function Navbar() {
 
         <div className="flex items-center gap-6">
           <Link to="/" className="text-gray-300 hover:text-white text-sm font-medium transition">
-            🏠 Home
+             Home
           </Link>
 
           {user?.role === "admin" ? (
             <>
               <Link to="/admin" className="text-gray-300 hover:text-white text-sm font-medium transition">
-                ⚙️ Admin
+                 Admin
               </Link>
               <button
                 onClick={handleLogout}
@@ -41,7 +41,7 @@ export default function Navbar() {
               to="/login"
               className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg transition"
             >
-              🔐 Admin Login
+               Admin Login
             </Link>
           )}
         </div>

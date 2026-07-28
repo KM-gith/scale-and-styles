@@ -53,7 +53,7 @@ export default function ScalePage() {
     );
   }
 
-  // Style kan faarfannoo qabu qofa agarsiisi
+  // Style kan faarfannaa qabu qofa agarsiisi
   const availableStyles = styles.filter((s) => songCounts[s._id] > 0);
 
   return (

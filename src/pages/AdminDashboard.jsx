@@ -94,7 +94,7 @@ export default function AdminDashboard() {
         tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
       });
 
-      setSuccess("Faarfannaan milkaa'inaan dabalame! 🎉");
+      setSuccess("Faarfannaan milkaa'inaan dabalame! ");
       resetForm();
       fetchData();
     } catch (err) {
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-900 text-white px-6 py-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">⚙️ Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-6"> Admin Dashboard</h1>
 
         {error && (
           <div className="bg-red-900/50 text-red-300 p-3 rounded-lg mb-4 text-sm">{error}</div>
@@ -143,7 +143,7 @@ export default function AdminDashboard() {
                 />
               </div>
               <div>
-                <label className="text-gray-300 text-sm block mb-1">Artist</label>
+                <label className="text-gray-300 text-sm block mb-1">Maqaa Faarfataa</label>
                 <input
                   type="text"
                   value={artist}
@@ -196,16 +196,7 @@ export default function AdminDashboard() {
               />
             </div>
 
-            <div>
-              <label className="text-gray-300 text-sm block mb-1">Tags (comma waliin gargari)</label>
-              <input
-                type="text"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-                placeholder="Faarfannoota gara garaa tag gochuu"
-                className="w-full p-2.5 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
+      
 
             <div>
               <label className="text-gray-300 text-sm block mb-1">Audio File (MP3/WAV) *</label>

@@ -29,7 +29,7 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center px-6">
       <div className="bg-gray-800 rounded-xl p-8 w-full max-w-sm shadow-xl">
-        <h1 className="text-2xl font-bold text-white text-center mb-2">🔐 Admin Login</h1>
+        <h1 className="text-2xl font-bold text-white text-center mb-2"> Admin Login</h1>
         <p className="text-gray-400 text-sm text-center mb-6">
           Faarfannaa fi scale dabaluuf seeni
         </p>
