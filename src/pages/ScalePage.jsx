@@ -69,18 +69,6 @@ export default function ScalePage() {
         <h1 className="text-3xl font-bold mb-2" style={{ color: scale.color }}>
           {scale.name}
         </h1>
-        <p className="text-gray-300 max-w-xl mx-auto">{scale.description}</p>
-        <div className="flex gap-2 justify-center mt-4 flex-wrap">
-          {scale.intervals?.map((iv, i) => (
-            <span
-              key={i}
-              className="text-sm px-3 py-1 rounded-full font-mono"
-              style={{ backgroundColor: scale.color + "33", color: scale.color }}
-            >
-              {iv}
-            </span>
-          ))}
-        </div>
       </div>
 
       {/* STYLES LIST */}
@@ -104,7 +92,6 @@ export default function ScalePage() {
               <h3 className="text-lg font-bold mb-1" style={{ color: style.color }}>
                 {style.name}
               </h3>
-              <p className="text-gray-400 text-sm line-clamp-2 mb-2">{style.description}</p>
               <span className="text-xs text-gray-500">
                 🎵 {songCounts[style._id]} Faarfannaa
               </span>
