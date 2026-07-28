@@ -115,6 +115,17 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteScale = async (scale) => {
+    if (!confirm(`Scale "${scale.name}" haquuf mirkaneessitaa?`)) return;
+    try {
+      await API.delete(`/scales/${scale._id}`);
+      setSuccess(`Scale "${scale.name}" haqamee jira.`);
+      fetchData();
+    } catch (err) {
+      setError(err.response?.data?.message || "Scale haquu hin dandeenye.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white px-6 py-8">
       <div className="max-w-4xl mx-auto">
@@ -217,6 +228,37 @@ export default function AdminDashboard() {
               {uploading ? "Uploading..." : "Dabali"}
             </button>
           </form>
+        </div>
+
+        {/* SCALES LIST */}
+        <div className="bg-gray-800 rounded-xl p-6 mb-8 shadow-lg">
+          <h2 className="text-lg font-bold mb-4">🎼 Scale-oota Jiran ({scales.length})</h2>
+          <div className="space-y-2">
+            {scales.map((scale) => (
+              <div
+                key={scale._id}
+                className="flex justify-between items-center bg-gray-700 rounded-lg p-3"
+              >
+                <div>
+                  <p className="font-medium" style={{ color: scale.color }}>
+                    {scale.name}
+                  </p>
+                  <p className="text-gray-400 text-xs">{scale.origin}</p>
+                </div>
+                <button
+                  onClick={() => handleDeleteScale(scale)}
+                  className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded-lg transition"
+                >
+                  Haqi
+                </button>
+              </div>
+            ))}
+            {scales.length === 0 && (
+              <p className="text-gray-400 text-sm text-center py-4">
+                Scale hin jiru ammaaf.
+              </p>
+            )}
+          </div>
         </div>
 
         {/* SONGS LIST */}
