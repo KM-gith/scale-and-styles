@@ -232,7 +232,7 @@ export default function AdminDashboard() {
 
         {/* SCALES LIST */}
         <div className="bg-gray-800 rounded-xl p-6 mb-8 shadow-lg">
-          <h2 className="text-lg font-bold mb-4">🎼 Scale-oota Jiran ({scales.length})</h2>
+          <h2 className="text-lg font-bold mb-4"> Scale-oota Jiran ({scales.length})</h2>
           <div className="space-y-2">
             {scales.map((scale) => (
               <div
