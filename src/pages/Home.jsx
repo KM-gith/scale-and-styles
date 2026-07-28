@@ -47,7 +47,7 @@ export default function Home() {
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                Ethiopian Scales
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {ethiopianScales.map((scale) => (
                 <ScaleCard key={scale._id} scale={scale} />
               ))}
@@ -71,10 +71,10 @@ function ScaleCard({ scale }) {
   return (
     <Link
       to={`/scale/${scale._id}`}
-      className="scale-card bg-gray-800 rounded-xl p-5 shadow-lg hover:shadow-2xl border-l-4"
+      className="scale-card bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl border-l-4 flex items-center justify-center min-h-[140px] transition hover:-translate-y-1"
       style={{ borderColor: scale.color }}
     >
-      <h3 className="text-lg font-bold mb-1" style={{ color: scale.color }}>
+      <h3 className="text-2xl font-bold text-center" style={{ color: scale.color }}>
         {scale.name}
       </h3>
     </Link>
