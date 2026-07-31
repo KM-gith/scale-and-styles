@@ -4,6 +4,12 @@ export default function AudioPlayer({ src, onPlay }) {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  // Cloudinary URL-oonni "http" jalqabu — kallattiin fayyadami
+  // kan durii (local /uploads/...) qofa API_URL-tiin walitti fayyadami
+  const audioSrc = src?.startsWith("http")
+    ? src
+    : `${import.meta.env.VITE_API_URL}${src}`;
+
   const togglePlay = () => {
     if (isPlaying) {
       audioRef.current.pause();
@@ -24,7 +30,7 @@ export default function AudioPlayer({ src, onPlay }) {
       </button>
       <audio
         ref={audioRef}
-        src={`${import.meta.env.VITE_API_URL}${src}`}
+        src={audioSrc}
         onEnded={() => setIsPlaying(false)}
         className="flex-1 h-8"
         controls
