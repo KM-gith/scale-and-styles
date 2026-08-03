@@ -13,6 +13,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [editingSongId, setEditingSongId] = useState(null);
 
   // Form state
   const [title, setTitle] = useState("");
@@ -28,7 +29,7 @@ export default function AdminDashboard() {
       navigate("/login");
       return;
     }
-    fetchData();
+  
   }, [user]);
 
   const fetchData = async () => {
@@ -58,6 +59,21 @@ export default function AdminDashboard() {
     setDescription("");
     setTags("");
     setAudioFile(null);
+    setEditingSongId(null);
+  };
+
+  const handleEditClick = (song) => {
+    setEditingSongId(song._id);
+    setTitle(song.title || "");
+    setArtist(song.artist || "");
+    setScaleId(song.scale?._id || "");
+    setStyleId(song.style?._id || "");
+    setDescription(song.description || "");
+    setTags(song.tags?.join(", ") || "");
+    setAudioFile(null);
+    setError("");
+    setSuccess("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleUpload = async (e) => {
@@ -65,7 +81,10 @@ export default function AdminDashboard() {
     setError("");
     setSuccess("");
 
-    if (!audioFile) {
+    const isEditing = Boolean(editingSongId);
+
+    // Audio file haaraa isa "add" (create) qofa dirqama; "edit" keessatti filatamaa (optional)
+    if (!isEditing && !audioFile) {
       setError("Audio file filadhu.");
       return;
     }
@@ -76,29 +95,43 @@ export default function AdminDashboard() {
 
     setUploading(true);
     try {
-      // 1. Audio file upload
-      const formData = new FormData();
-      formData.append("audio", audioFile);
-      const uploadRes = await API.post("/upload/audio", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      let audioUrl;
 
-      // 2. Song record uumi
-      await API.post("/songs", {
+      // Audio file haaraa yoo filatame (edit keessattis ta'e, create keessattis), upload godhi
+      if (audioFile) {
+        const formData = new FormData();
+        formData.append("audio", audioFile);
+        const uploadRes = await API.post("/upload/audio", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        audioUrl = uploadRes.data.audioUrl;
+      }
+
+      const payload = {
         title,
         artist,
         scale: scaleId,
         style: styleId,
-        audioUrl: uploadRes.data.audioUrl,
         description,
         tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
-      });
+      };
+      if (audioUrl) payload.audioUrl = audioUrl;
 
-      setSuccess("Faarfannaan milkaa'inaan dabalame! ");
+      if (isEditing) {
+        await API.put(`/songs/${editingSongId}`, payload);
+        setSuccess("Faarfannaan milkaa'inaan sirreeffame! ");
+      } else {
+        await API.post("/songs", payload);
+        setSuccess("Faarfannaan milkaa'inaan dabalame! ");
+      }
+
       resetForm();
       fetchData();
     } catch (err) {
-      setError(err.response?.data?.message || "Dabaluu hin dandeenye.");
+      setError(
+        err.response?.data?.message ||
+          (isEditing ? "Sirreessuu hin dandeenye." : "Dabaluu hin dandeenye.")
+      );
     } finally {
       setUploading(false);
     }
@@ -140,7 +173,9 @@ export default function AdminDashboard() {
 
         {/* UPLOAD FORM */}
         <div className="bg-gray-800 rounded-xl p-6 mb-8 shadow-lg">
-          <h2 className="text-lg font-bold mb-4">➕ Faarfannaa Haaraa Dabalii</h2>
+          <h2 className="text-lg font-bold mb-4">
+            {editingSongId ? "✏️ Faarfannaa Sirreessi" : "➕ Faarfannaa Haaraa Dabalii"}
+          </h2>
           <form onSubmit={handleUpload} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -210,29 +245,51 @@ export default function AdminDashboard() {
       
 
             <div>
-              <label className="text-gray-300 text-sm block mb-1">Audio File (MP3/WAV) *</label>
+              <label className="text-gray-300 text-sm block mb-1">
+                Audio File (MP3/WAV/M4A) {editingSongId ? "(filachuun barbaachisaa miti)" : "*"}
+              </label>
               <input
                 type="file"
                 accept="audio/*"
                 onChange={(e) => setAudioFile(e.target.files[0])}
-                required
+                required={!editingSongId}
                 className="w-full p-2.5 rounded-lg bg-gray-700 text-white border border-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-indigo-600 file:text-white file:cursor-pointer"
               />
+              {editingSongId && (
+                <p className="text-gray-500 text-xs mt-1">
+                  Yoo file haaraa hin filatin, audio-n durii akkuma jirutti hafa.
+                </p>
+              )}
             </div>
 
-            <button
-              type="submit"
-              disabled={uploading}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium rounded-lg transition"
-            >
-              {uploading ? "Uploading..." : "Dabali"}
-            </button>
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                disabled={uploading}
+                className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium rounded-lg transition"
+              >
+                {uploading
+                  ? "Fe'aa jira..."
+                  : editingSongId
+                  ? "Sirreessa Ol Kaa'i"
+                  : "Dabali"}
+              </button>
+              {editingSongId && (
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="px-5 py-2.5 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition"
+                >
+                  Dhiisi
+                </button>
+              )}
+            </div>
           </form>
         </div>
 
         {/* SCALES LIST */}
         <div className="bg-gray-800 rounded-xl p-6 mb-8 shadow-lg">
-          <h2 className="text-lg font-bold mb-4"> Scale-oota Jiran ({scales.length})</h2>
+          <h2 className="text-lg font-bold mb-4"> Scale Jiran ({scales.length})</h2>
           <div className="space-y-2">
             {scales.map((scale) => (
               <div
@@ -263,7 +320,7 @@ export default function AdminDashboard() {
 
         {/* SONGS LIST */}
         <div className="bg-gray-800 rounded-xl p-6 shadow-lg">
-          <h2 className="text-lg font-bold mb-4">🎵 Faarfannoota Jiran ({songs.length})</h2>
+          <h2 className="text-lg font-bold mb-4"> Faarfannoota Jiran ({songs.length})</h2>
           <div className="space-y-2">
             {songs.map((song) => (
               <div
@@ -276,12 +333,20 @@ export default function AdminDashboard() {
                     {song.scale?.name} · {song.style?.name} | {song.artist} | ▶ {song.plays || 0}
                   </p>
                 </div>
-                <button
-                  onClick={() => handleDelete(song._id)}
-                  className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded-lg transition"
-                >
-                  Haqi
-                </button>
+                <div className="flex gap-2 flex-shrink-0">
+                  <button
+                    onClick={() => handleEditClick(song)}
+                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs rounded-lg transition"
+                  >
+                    Sirreessi
+                  </button>
+                  <button
+                    onClick={() => handleDelete(song._id)}
+                    className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded-lg transition"
+                  >
+                    Haqi
+                  </button>
+                </div>
               </div>
             ))}
             {songs.length === 0 && (
