@@ -24,21 +24,15 @@ export default function AdminDashboard() {
   const [tags, setTags] = useState("");
   const [audioFile, setAudioFile] = useState(null);
 
-  useEffect(() => {
-    if (!user || user.role !== "admin") {
-      navigate("/login");
-      return;
-    }
-  
-  }, [user]);
-
   const fetchData = async () => {
+    console.log("🔵 fetchData STARTED");
     try {
       const [scalesRes, stylesRes, songsRes] = await Promise.all([
         API.get("/scales"),
         API.get("/styles"),
         API.get("/songs"),
       ]);
+      console.log(" fetchData SUCCESS - scales:", scalesRes.data.length, "styles:", stylesRes.data.length, "songs:", songsRes.data.length);
       setScales(scalesRes.data);
       setStyles(stylesRes.data);
       setSongs(songsRes.data);
@@ -48,10 +42,20 @@ export default function AdminDashboard() {
       if (stylesRes.data.length > 0 && !styleId) {
         setStyleId(stylesRes.data[0]._id);
       }
-    } catch {
+    } catch (err) {
+      console.log(" fetchData FAILED:", err.message, err.response?.status, err.response?.data);
       setError("Odeeffannoo fiduu hin dandeenye.");
     }
   };
+
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      navigate("/login");
+      return;
+    }
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const resetForm = () => {
     setTitle("");
@@ -289,7 +293,7 @@ export default function AdminDashboard() {
 
         {/* SCALES LIST */}
         <div className="bg-gray-800 rounded-xl p-6 mb-8 shadow-lg">
-          <h2 className="text-lg font-bold mb-4"> Scale Jiran ({scales.length})</h2>
+          <h2 className="text-lg font-bold mb-4">🎼 Scale-oota Jiran ({scales.length})</h2>
           <div className="space-y-2">
             {scales.map((scale) => (
               <div
@@ -320,7 +324,7 @@ export default function AdminDashboard() {
 
         {/* SONGS LIST */}
         <div className="bg-gray-800 rounded-xl p-6 shadow-lg">
-          <h2 className="text-lg font-bold mb-4"> Faarfannoota Jiran ({songs.length})</h2>
+          <h2 className="text-lg font-bold mb-4">🎵 Faarfannoota Jiran ({songs.length})</h2>
           <div className="space-y-2">
             {songs.map((song) => (
               <div
